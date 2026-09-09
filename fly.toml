@@ -1,0 +1,33 @@
+# Fly.io deployment for TraceCAT.
+# See HOSTING.md for the one-time account setup this expects.
+app = "cad-foto"
+primary_region = "mad"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  STORAGE_PATH = "/app/storage"
+  # Fly terminates TLS, so the auth cookie must be marked Secure.
+  AUTH_COOKIE_SECURE = "true"
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_start_machines = true
+  # The image carries torch and ONNX, so a cold start is slow. Suspending
+  # rather than stopping keeps that to a few seconds.
+  auto_stop_machines = "suspend"
+  min_machines_running = 0
+
+# Tools, bins, accounts and the generated auth secret all live here. Without
+# this volume every deploy would start empty.
+[mounts]
+  source = "cad_foto_data"
+  destination = "/app/storage"
+
+[[vm]]
+  cpu_kind = "shared"
+  cpus = 2
+  # Background removal loads a model per request; 1GB is not enough.
+  memory_mb = 4096
