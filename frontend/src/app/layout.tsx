@@ -30,7 +30,7 @@ export default function RootLayout({
       <head>
         <title>TraceCAT</title>
         <meta name="description" content="Turn a photo of your tools into a custom Gridfinity bin, ready to 3D print." />
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="icon" type="image/png" href="/logo.png" />
       </head>
       <body className="bg-base text-text-primary min-h-screen">
         <QueryClientProvider client={queryClient}>
@@ -38,7 +38,7 @@ export default function RootLayout({
             <header className="h-11 bg-surface/80 backdrop-blur-md border-b border-border sticky top-0 z-50">
               <div className="h-full px-4 flex items-center justify-between">
                 <Link href="/" className="flex items-center gap-2 text-text-primary hover:opacity-80 flex-shrink-0">
-                  <img src="/favicon.svg" alt="" className="w-6 h-6" />
+                  <img src="/logo.png" alt="" className="w-7 h-7" />
                   <span className="font-display text-[15px] font-semibold tracking-[-0.4px]">
                     Trace<span className="text-accent">CAT</span>
                   </span>
