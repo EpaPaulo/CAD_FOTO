@@ -72,8 +72,8 @@ body {
   select:focus-visible,
   textarea:focus-visible {
     @apply outline-none ring-2 ring-offset-2;
-    ring-color: var(--color-accent);
-    ring-offset-color: var(--color-base);
+    --tw-ring-color: var(--color-accent);
+    --tw-ring-offset-color: var(--color-base);
   }
 }
 
@@ -310,4 +310,56 @@ input[type="number"] { -moz-appearance: textfield; }
 
 @media (prefers-reduced-motion: reduce) {
   .upload-anim { animation: none !important; }
+}
+
+/* A quiet workspace with a clear photo-to-print path. */
+.workspace-nav { display:flex; gap:6px; padding:6px; border:1px solid var(--color-border); border-radius:14px; background:var(--color-surface); overflow-x:auto; width:fit-content; max-width:100%; margin:0 auto; }
+.workspace-nav button { display:flex; align-items:center; gap:8px; white-space:nowrap; padding:10px 18px; border-radius:9px; color:var(--color-text-secondary); font-weight:500; font-size:14px; }
+.workspace-nav button[aria-current] { color:var(--color-text-primary); background:var(--color-accent-muted); }
+.workspace-nav button:hover { background:var(--color-elevated); }
+.workspace-nav button span { font-size:11px; opacity:.8; }
+.workspace-intro { text-align:center; padding:14px 12px 0; }
+.workspace-eyebrow { color:var(--color-accent); font-size:11px; font-weight:700; letter-spacing:2px; }
+.workspace-intro h1 { font-size:clamp(30px,4vw,46px); line-height:1.15; font-weight:650; letter-spacing:-1.6px; margin:14px 0; }
+.workspace-intro > p { color:var(--color-text-secondary); font-size:15px; max-width:540px; margin:0 auto; line-height:1.7; }
+.journey-overview { display:flex; justify-content:center; gap:28px; margin-top:28px; }
+.journey-overview li { display:flex; align-items:center; gap:9px; color:var(--color-text-secondary); font-size:13px; }
+.journey-overview li span { display:grid; place-items:center; width:26px; height:26px; border-radius:50%; border:1px solid var(--color-border-subtle); font-size:11px; }
+.journey-overview li:first-child { color:var(--color-text-primary); }
+.journey-overview li:first-child span { color:white; background:var(--color-accent); border-color:var(--color-accent); }
+.capture-card { display:grid; grid-template-columns:1.6fr 1fr; overflow:hidden; background:var(--color-surface); border:1px solid var(--color-border); border-radius:20px; box-shadow:0 14px 45px #0000000a; }
+.capture-dropzone { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; text-align:center; margin:20px; padding:24px; border:2px dashed var(--color-border-subtle); border-radius:14px; transition:border-color .15s, background .15s; }
+.capture-dropzone.is-dragging { background:var(--color-accent-muted); border-color:var(--color-accent); }
+.capture-icon { display:grid; place-items:center; width:64px; height:64px; border-radius:18px; background:var(--color-accent-muted); color:var(--color-accent); }
+.capture-dropzone h2 { font-size:23px; font-weight:600; letter-spacing:-.5px; }
+.capture-dropzone > p { color:var(--color-text-secondary); font-size:14px; max-width:310px; line-height:1.6; }
+.capture-button { display:inline-flex; align-items:center; justify-content:center; gap:10px; min-height:46px; padding:12px 28px; margin-top:5px; border-radius:10px; font-size:14px; }
+.capture-guide { border-left:1px solid var(--color-border); padding:28px; }
+.capture-example { height:140px; margin:16px auto; max-width:230px; }
+.capture-example svg { width:100%; height:100%; }
+.advanced-settings { border-top:1px solid var(--color-border); margin-top:18px; padding-top:14px; }
+.advanced-settings summary { cursor:pointer; color:var(--color-text-primary); font-size:13px; font-weight:600; padding:4px 0 10px; }
+.advanced-settings summary span { display:block; margin-top:5px; color:var(--color-text-secondary); font-size:11px; font-weight:400; }
+.trace-workspace h3 { font-size:15px; text-transform:none; letter-spacing:0; line-height:1.5; color:var(--color-text-primary); }
+.trace-workspace .btn-primary { min-height:44px; }
+.step-progress button { min-height:28px; }
+.workspace-home .glass-card { border-radius:12px; }
+@media (max-width:700px) {
+  .workspace-intro { padding-top:16px; }
+  .workspace-nav { width:100%; }
+  .workspace-nav button { padding:9px 12px; font-size:12px; }
+  .journey-overview { gap:12px; }
+  .journey-overview li { flex-direction:column; gap:6px; font-size:11px; }
+  .capture-card { grid-template-columns:1fr; }
+  .capture-dropzone { margin:12px; padding:28px 16px; }
+  .capture-guide { border-left:0; border-top:1px solid var(--color-border); padding:20px; }
+  .capture-example { display:none; }
+  .capture-guide ul { margin-top:16px; }
+  .step-progress > div > div { width:12px; margin:0 3px; }
+  .step-progress button { flex-direction:column; gap:4px; }
+  .bin-workspace { height:auto; min-height:calc(100dvh - 44px); }
+  .bin-workspace-body { flex-direction:column; }
+  .bin-settings { width:100%; border-right:0; border-bottom:1px solid var(--color-border); }
+  .bin-canvases { flex-direction:column; flex:none; }
+  .bin-canvases > div { flex:none; min-height:420px; }
 }

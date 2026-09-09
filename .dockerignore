@@ -12,6 +12,8 @@ storage
 docs
 .env
 .env.*
+**/.env
+**/.env.*
 .DS_Store
 CLAUDE.md
 AGENTS.md

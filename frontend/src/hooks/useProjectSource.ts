@@ -8,7 +8,7 @@ export function useProjectSource(defaultLabel: string, defaultHref = '/') {
   return {
     projectId,
     rootLabel: projectId ? 'Projects' : defaultLabel,
-    rootHref: projectId ? `/projects/${projectId}` : defaultHref,
+    rootHref: projectId ? `/projects/${projectId}` : defaultHref === '/' && ['Bins', 'Tools'].includes(defaultLabel) ? `/#${defaultLabel.toLowerCase()}` : defaultHref,
     scopedHref: (path: string) => projectId ? projectScopedHref(projectId, path) : path,
   }
 }

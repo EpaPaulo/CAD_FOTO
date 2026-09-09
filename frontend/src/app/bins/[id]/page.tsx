@@ -25,6 +25,7 @@ import {
 } from '@/lib/constants'
 import { useTheme } from '@/hooks/useTheme'
 import { cn } from '@/lib/utils'
+import { StepBar } from '@/components/StepBar'
 
 function InfoBanner({ children }: { children: React.ReactNode }) {
   const { theme } = useTheme()
@@ -67,6 +68,7 @@ export default function BinPage() {
   const smoothLevelTimerRef = useRef<NodeJS.Timeout | null>(null)
 
   const [autoSize, setAutoSize] = useState(true)
+  const [libraryOpen, setLibraryOpen] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   const [exportOpen, setExportOpen] = useState(false)
   const [defaultsStatus, setDefaultsStatus] = useState<string | null>(null)
@@ -141,6 +143,7 @@ export default function BinPage() {
           return { ...pt, interior_rings: newRings }
         })
         setPlacedTools(synced)
+        setLibraryOpen(synced.length === 0)
         setTextLabels(data.text_labels)
         setName(data.name || '')
         setConfig(buildBinConfig(data.bin_config));
@@ -432,9 +435,11 @@ export default function BinPage() {
   const hasExports = !gridLimitError && (stlUrl || zipUrl || threemfUrl || insertStlUrl)
 
   return (
-    <div className="h-[calc(100vh-44px)] flex">
+    <div className="bin-workspace h-[calc(100dvh-44px)] flex flex-col">
+      <StepBar steps={['Upload photo', 'Check tools', 'Design & download']} current={2} />
+      <div className="bin-workspace-body flex flex-1 min-h-0">
       {/* config sidebar - always open */}
-      <div className="w-[200px] flex-shrink-0 bg-surface border-r border-border flex flex-col">
+      <div className="bin-settings w-[280px] flex-shrink-0 bg-surface border-r border-border flex flex-col">
         <div className="flex-1 min-h-0 overflow-y-auto scrollbar-thin p-3 space-y-3">
           <div className="glass rounded-[10px] px-3 py-3">
             <div className="flex items-center gap-2 mb-3">
@@ -456,6 +461,8 @@ export default function BinPage() {
                 Changes are not being saved. Recent edits to this bin will be lost if you leave the page.
               </div>
             )}
+            <h1 className="text-lg font-semibold mb-1">Make it fit.</h1>
+            <p className="text-sm text-text-secondary mb-4">Arrange your tools, check the preview, then download your bin.</p>
             <BinConfigurator config={config} onChange={setConfig} autoSize={autoSize} onAutoSizeChange={setAutoSize} />
             <div className="mt-3 border-t border-border pt-3 space-y-1.5">
               <div className="flex gap-1.5">
@@ -502,13 +509,18 @@ export default function BinPage() {
             <InfoBanner>Split into {splitCount} pieces</InfoBanner>
           )}
           {hasExports && (
+            <div className="space-y-2">
+            {(zipUrl || stlUrl) && <button onClick={zipUrl ? handleDownloadZip : handleDownload} className="btn-primary w-full py-3 text-sm inline-flex items-center justify-center gap-2">
+              <Download className="h-4 w-4" />{zipUrl ? 'Download printable parts' : 'Download STL'}
+            </button>}
+            <p className="text-xs text-text-secondary text-center">Open the download in your slicer to print.</p>
             <div className="relative" ref={exportRef}>
               <button
                 onClick={() => setExportOpen(p => !p)}
-                className="btn-primary w-full py-2 text-[11px] font-medium inline-flex items-center justify-center gap-1 cursor-pointer"
+                className="btn-secondary w-full py-2 text-xs font-medium inline-flex items-center justify-center gap-1 cursor-pointer"
               >
                 <Download className="w-3.5 h-3.5" />
-                Export
+                More download formats
                 <ChevronDown className="w-3 h-3" />
               </button>
               {exportOpen && (
@@ -552,6 +564,7 @@ export default function BinPage() {
                 </div>
               )}
             </div>
+            </div>
           )}
         </div>
       </div>
@@ -559,7 +572,8 @@ export default function BinPage() {
       {/* right of sidebar: library on top, then canvas + 3D preview below */}
       <div className="flex-1 min-w-0 flex flex-col">
         {/* library strip - full width */}
-        <div className="flex-shrink-0 bg-surface border-b border-border px-3 py-2">
+        <details open={libraryOpen} onToggle={e => setLibraryOpen(e.currentTarget.open)} className="flex-shrink-0 bg-surface border-b border-border px-3 py-2">
+          <summary className="text-sm text-text-secondary cursor-pointer py-1">Add more tools from your library</summary>
           <ToolBrowser
             onAddTool={handleAddTool}
             binWidthMm={binW}
@@ -568,10 +582,10 @@ export default function BinPage() {
             projectId={projectSource.projectId}
             currentToolIds={placedTools.map(tool => tool.tool_id)}
           />
-        </div>
+        </details>
 
         {/* canvas + 3D preview side by side, equal width */}
-        <div className="flex-1 min-h-0 flex">
+        <div className="bin-canvases flex-1 min-h-0 flex">
           {/* canvas */}
           <div className="flex-1 min-w-0 relative bg-inset overflow-hidden" data-testid="bin-editor">
             <div className="absolute inset-0">
@@ -649,6 +663,7 @@ export default function BinPage() {
             </div>
           </div>
         </div>
+      </div>
       </div>
     </div>
   )

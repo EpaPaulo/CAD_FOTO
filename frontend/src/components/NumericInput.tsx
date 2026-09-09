@@ -11,6 +11,7 @@ interface Props {
   className?: string
   disabled?: boolean
   title?: string
+  'aria-label'?: string
 }
 
 export function clampNumericValue(raw: string, min: number, max: number, step: number, fallback: number): number {
@@ -22,7 +23,7 @@ export function clampNumericValue(raw: string, min: number, max: number, step: n
 }
 
 // defers min/max clamping to blur or Enter -- lets users type freely
-export function NumericInput({ value, min, max, step = 1, onChange, className, disabled, title }: Props) {
+export function NumericInput({ value, min, max, step = 1, onChange, className, disabled, title, 'aria-label': ariaLabel }: Props) {
   const [text, setText] = useState(String(value))
   const committedRef = useRef(value)
 
@@ -48,6 +49,7 @@ export function NumericInput({ value, min, max, step = 1, onChange, className, d
 
   return (
     <input
+      aria-label={ariaLabel}
       type="number"
       min={min}
       max={max}

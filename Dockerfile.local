@@ -1,0 +1,19 @@
+# Rebuild the UI while retaining the installed, pinned backend and local models.
+FROM node:22-slim AS ui-build
+RUN corepack enable && corepack prepare pnpm@10.29.2 --activate
+WORKDIR /frontend
+COPY frontend/package.json frontend/pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
+COPY frontend/ ./
+ENV NEXT_PUBLIC_API_URL=""
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV BACKEND_URL=http://127.0.0.1:8000
+RUN pnpm build
+
+FROM ghcr.io/tracefinity/tracefinity@sha256:f572f1e70246845ad48467b20748835f3cef60df313b30ebce8f6c94f1faf347
+COPY --from=ui-build /frontend/.next /app/.next
+COPY --from=ui-build /frontend/node_modules /app/node_modules
+COPY --from=ui-build /frontend/public /app/public
+COPY --from=ui-build /frontend/package.json /app/package.json
+RUN chmod -R a+rwX /app/.next
+ENV APP_VERSION=local-ux

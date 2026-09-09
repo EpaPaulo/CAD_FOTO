@@ -10,7 +10,7 @@ interface Props {
 
 export function StepBar({ steps, current, onStepClick }: Props) {
   return (
-    <div className="flex items-center justify-center gap-0 px-4 py-2 border-b border-border bg-surface/60 backdrop-blur-md">
+    <nav aria-label="Creation progress" className="step-progress flex items-center justify-center gap-0 px-2 py-3 border-b border-border bg-surface/60 backdrop-blur-md">
       {steps.map((label, i) => {
         const completed = i < current
         const active = i === current
@@ -26,6 +26,7 @@ export function StepBar({ steps, current, onStepClick }: Props) {
             <button
               onClick={() => clickable && onStepClick(i)}
               disabled={!clickable}
+              aria-current={active ? 'step' : undefined}
               className={`flex items-center gap-1.5 transition-all duration-150 ${
                 clickable ? 'cursor-pointer hover:opacity-80' : 'cursor-default'
               }`}
@@ -36,7 +37,7 @@ export function StepBar({ steps, current, onStepClick }: Props) {
               `}>
                 {completed ? <Check className="w-3 h-3" /> : i + 1}
               </div>
-              <span className={`text-xs font-medium hidden sm:inline transition-colors duration-150 ${
+              <span className={`text-[10px] sm:text-xs font-medium transition-colors duration-150 ${
                 active ? 'text-text-primary' : completed ? 'text-text-secondary' : 'text-text-muted'
               }`}>
                 {label}
@@ -45,6 +46,6 @@ export function StepBar({ steps, current, onStepClick }: Props) {
           </div>
         )
       })}
-    </div>
+    </nav>
   )
 }

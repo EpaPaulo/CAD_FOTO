@@ -13,6 +13,9 @@ build/
 tsconfig.tsbuildinfo
 
 # storage
+data/
+.local-backups/
+.local-models/
 backend/storage/uploads/*
 backend/storage/processed/*
 backend/storage/outputs/*

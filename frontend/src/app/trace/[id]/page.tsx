@@ -9,7 +9,8 @@ import { PaperCornerEditor } from '@/components/PaperCornerEditor'
 import { PolygonEditor } from '@/components/PolygonEditor'
 import { SessionInfo } from '@/components/SessionInfo'
 import { Alert } from '@/components/Alert'
-import { getSession, setCorners, traceTools, updatePolygons, updateSession, getImageUrl, getAvailableKeys, traceFromMask, saveToolsFromSession } from '@/lib/api'
+import { getSession, setCorners, traceTools, updatePolygons, updateSession, getImageUrl, getAvailableKeys, traceFromMask } from '@/lib/api'
+import { finishTrace, type TraceCheckpoint } from '@/lib/finishTrace'
 import { CornersHint, TraceHint, EditHint } from '@/components/OnboardingIllustrations'
 import { PhotoWarningsBanner } from '@/components/PhotoWarningsBanner'
 import { StepBar } from '@/components/StepBar'
@@ -90,6 +91,8 @@ export default function TracePage() {
   const maskInputRef = useRef<HTMLInputElement>(null)
   const statusInterval = useRef<NodeJS.Timeout | null>(null)
   const polygonsDirtyRef = useRef(false)
+  const completionRef = useRef<TraceCheckpoint>({})
+  const completionBusy = useRef(false)
 
   useEffect(() => {
     if (!methodOpen) return
@@ -136,6 +139,7 @@ export default function TracePage() {
         }
         if (s.polygons && s.polygons.length > 0) {
           setPolygons(s.polygons)
+          setIncludedPolygons(new Set(s.polygons.map(p => p.id)))
           setStep('edit')
         } else if (s.corrected_image_path) {
           setStep('trace')
@@ -147,7 +151,7 @@ export default function TracePage() {
       }
     }
     load()
-  }, [sessionId])
+  }, [sessionId, setIncludedPolygons])
 
   useEffect(() => {
     if (session) {
@@ -194,6 +198,7 @@ export default function TracePage() {
             tid,
           )
           setPolygons(traceResult.polygons)
+          setIncludedPolygons(new Set(traceResult.polygons.map(p => p.id)))
           if (traceResult.mask_url) {
             setMaskUrl(traceResult.mask_url)
             setMaskVersion(v => v + 1)
@@ -243,6 +248,7 @@ export default function TracePage() {
         tid || undefined,
       )
       setPolygons(result.polygons)
+      setIncludedPolygons(new Set(result.polygons.map(p => p.id)))
       if (result.mask_url) {
         setMaskUrl(result.mask_url)
         setMaskVersion((v) => v + 1)
@@ -267,6 +273,7 @@ export default function TracePage() {
     try {
       const result = await traceFromMask(sessionId, file)
       setPolygons(result.polygons)
+      setIncludedPolygons(new Set(result.polygons.map(p => p.id)))
       if (result.mask_url) {
         setMaskUrl(result.mask_url)
         setMaskVersion((v) => v + 1)
@@ -335,21 +342,22 @@ export default function TracePage() {
     }
   }, [])
 
-  async function handleSaveToLibrary() {
-    if (includedPolygons.size === 0) return
+  async function handleFinish(destination: 'bin' | 'library') {
+    if (includedPolygons.size === 0 || completionBusy.current) return
+    completionBusy.current = true
     setSaving(true)
     setError(null)
     try {
       const normalized = normalizePolygonLabels(polygons)
       setPolygons(normalized)
-      await updatePolygons(sessionId, normalized)
+      const href = await finishTrace(sessionId, normalized, Array.from(includedPolygons), destination, completionRef.current)
       polygonsDirtyRef.current = false
-      await saveToolsFromSession(sessionId, Array.from(includedPolygons))
-      router.push('/')
+      router.push(href)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'failed to save tools')
+      setError(err instanceof Error ? err.message : 'Could not finish. Please try again.')
     } finally {
       setSaving(false)
+      completionBusy.current = false
     }
   }
 
@@ -370,13 +378,13 @@ export default function TracePage() {
     )
   }
 
-  const steps = singleTracer ? ['Corners', 'Save'] : ['Corners', 'Trace', 'Save']
+  const steps = singleTracer ? ['Check photo', 'Check tools', 'Design & download'] : ['Check photo', 'Find outlines', 'Check tools', 'Design & download']
   const stepIndex = singleTracer
     ? (step === 'corners' ? 0 : 1)
     : (step === 'corners' ? 0 : step === 'trace' ? 1 : 2)
 
   return (
-    <div className="h-[calc(100vh-44px)] flex flex-col w-full">
+    <div className="trace-workspace h-[calc(100dvh-44px)] flex flex-col w-full">
       <StepBar
         steps={steps}
         current={stepIndex}
@@ -387,20 +395,20 @@ export default function TracePage() {
       />
       <div className="flex-1 flex flex-col md:flex-row min-h-0">
       {/* left sidebar - controls */}
-      <div className="md:w-[240px] md:flex-shrink-0 bg-surface border-b md:border-b-0 md:border-r border-border overflow-y-auto flex flex-col max-h-[40vh] md:max-h-none">
+      <div className="md:w-[290px] md:flex-shrink-0 bg-surface border-b md:border-b-0 md:border-r border-border overflow-y-auto flex flex-col max-h-[45vh] md:max-h-none">
         <div className="p-3 space-y-3">
           <div className="glass rounded-[10px] px-3 py-3">
             <h3 className="text-[10px] font-semibold text-text-muted uppercase tracking-widest mb-2">
-              {step === 'corners' && (traceStatus ? 'Tracing...' : 'Adjust Corners')}
-              {step === 'trace' && 'Trace Tools'}
-              {step === 'edit' && 'Select Tools'}
+              {step === 'corners' && (traceStatus ? 'Finding your tools…' : 'Check your photo')}
+              {step === 'trace' && 'Find your tool outlines'}
+              {step === 'edit' && 'Which tools belong in your bin?'}
             </h3>
 
           {step === 'corners' && (
             <div className="space-y-3">
               <CornersHint />
               <p className="text-xs text-text-muted">
-                Drag the corner handles to match the paper edges.
+                Do the four markers match the paper corners? Drag any that need adjusting. This makes your bin the right size.
               </p>
 
               <div>
@@ -427,7 +435,7 @@ export default function TracePage() {
           {step === 'trace' && (
             <div className="space-y-3">
               <TraceHint />
-              {tracers.length > 1 && (
+              {tracers.length > 0 && (
                 <div className="relative" ref={methodRef}>
                   <span className="text-xs text-text-primary tracking-[0.3px]">Tracer</span>
                   <button
@@ -582,6 +590,10 @@ export default function TracePage() {
 
               {polygons.length > 0 && (
                 <div className="text-xs space-y-0.5">
+                  <div className="flex gap-3 pb-2">
+                    <button disabled={saving} className="text-accent py-1" onClick={() => setIncludedPolygons(new Set(polygons.map(p => p.id)))}>Select all</button>
+                    <button disabled={saving} className="text-text-secondary py-1" onClick={() => setIncludedPolygons(new Set())}>Clear selection</button>
+                  </div>
                   {polygons.map((p) => {
                     const isIncluded = includedPolygons.has(p.id)
                     return (
@@ -601,11 +613,9 @@ export default function TracePage() {
                               : 'text-text-muted hover:bg-elevated hover:text-text-secondary'
                           }`}
                         >
-                        <div className={`w-3.5 h-3.5 rounded-sm border flex items-center justify-center flex-shrink-0 transition-colors ${
-                          isIncluded ? 'bg-accent border-accent' : 'border-border-subtle'
-                        }`}>
-                          {isIncluded && <Check className="w-2.5 h-2.5 text-white" />}
-                        </div>
+                        <input type="checkbox" aria-label={`Include ${p.label || 'tool'}`} checked={isIncluded} disabled={saving}
+                          className="h-4 w-4 accent-[var(--color-accent)]" onClick={event => event.stopPropagation()}
+                          onChange={() => { const next = new Set(includedPolygons); if (next.has(p.id)) next.delete(p.id); else next.add(p.id); setIncludedPolygons(next) }} />
                         {editingPolygonLabelId === p.id ? (
                           <input
                             type="text"
@@ -647,14 +657,14 @@ export default function TracePage() {
           </div>
 
           {step === 'edit' && maskUrl && (
-            <div className="glass rounded-[10px] px-3 py-3">
-              <h3 className="text-[10px] font-semibold text-text-muted uppercase tracking-widest mb-2">Mask</h3>
+            <details className="glass rounded-[10px] px-3 py-3">
+              <summary className="text-xs text-text-secondary cursor-pointer">View detected silhouette</summary>
               <img
                 src={`${getImageUrl(maskUrl)}?v=${maskVersion}`}
                 alt="Generated mask"
                 className="w-full rounded-lg border border-border-subtle"
               />
-            </div>
+            </details>
           )}
 
           {!warningsDismissed && (
@@ -675,11 +685,11 @@ export default function TracePage() {
               className="btn-primary w-full py-2 text-sm inline-flex items-center justify-center gap-1.5"
             >
               {processing && <Loader2 className="w-4 h-4 animate-spin" />}
-              {traceStatus || (processing ? 'Processing...' : 'Continue')}
+              {traceStatus || (processing ? 'Processing...' : 'Photo looks good →')}
             </button>
           )}
 
-          {step === 'trace' && provider === 'google' && (tracers.length > 1 || processing) && (
+          {step === 'trace' && provider === 'google' && (tracers.length > 0 || processing) && (
             <button
               onClick={() => handleTrace()}
               disabled={(selectedTracer === 'gemini' && !hasEnvKey && !apiKey.trim()) || processing}
@@ -713,15 +723,18 @@ export default function TracePage() {
           {step === 'edit' && (
             <>
               <button
-                onClick={handleSaveToLibrary}
+                onClick={() => handleFinish('bin')}
                 disabled={includedPolygons.size === 0 || saving}
                 className="btn-primary w-full py-2 text-sm inline-flex items-center justify-center gap-1.5"
               >
                 {saving && <Loader2 className="w-4 h-4 animate-spin" />}
-                {saving ? 'Saving...' : includedPolygons.size === 0 ? 'Select tools to save' : `Save ${includedPolygons.size} tool${includedPolygons.size === 1 ? '' : 's'}`}
+                {saving ? 'Preparing…' : includedPolygons.size === 0 ? 'Select tools to continue' : 'Create my bin →'}
               </button>
+              <p className="text-xs text-text-secondary text-center">Your selected tools are also saved to your library.</p>
+              <button onClick={() => handleFinish('library')} disabled={saving || includedPolygons.size === 0} className="btn-secondary w-full py-2 text-sm">Only save tools</button>
               <button
                 onClick={() => setStep('trace')}
+                disabled={saving}
                 className="btn-secondary w-full py-1.5 text-sm inline-flex items-center justify-center"
               >
                 Re-trace

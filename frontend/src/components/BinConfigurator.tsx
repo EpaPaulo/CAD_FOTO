@@ -48,6 +48,9 @@ function Toggle({ checked, onChange, label, help, disabled }: { checked: boolean
       </span>
       <button
         type="button"
+        role="switch"
+        aria-label={label}
+        aria-checked={checked}
         disabled={disabled}
         onClick={() => onChange(!checked)}
         className={`relative inline-flex h-5 w-9 items-center rounded transition-colors ${
@@ -103,6 +106,7 @@ function SliderRow({
       <div className="flex items-center gap-2">
         <input
           type="range"
+          aria-label={label}
           min={min}
           max={max}
           step={step}
@@ -117,6 +121,7 @@ function SliderRow({
         />
         <div className="flex items-center gap-1">
           <NumericInput
+            aria-label={`${label} value`}
             min={min}
             max={max}
             step={step}
@@ -178,13 +183,14 @@ export function BinConfigurator({ config, onChange, autoSize, onAutoSizeChange }
     <div className="space-y-0">
       {onAutoSizeChange && (
         <Toggle
-          label="Auto-size grid"
+          label="Fit bin to tools"
           help="Automatically fit grid to placed tools. Turn off to set grid size manually."
           checked={!!autoSize}
           onChange={onAutoSizeChange}
         />
       )}
 
+      {!autoSize && <>
       <SliderRow
         label="Grid Width"
         help="Bin width in gridfinity units (42mm each). Half-unit increments (21mm) supported."
@@ -219,6 +225,8 @@ export function BinConfigurator({ config, onChange, autoSize, onAutoSizeChange }
         disabled={autoSize}
       />
 
+      </>}
+
       <SliderRow
         label="Height"
         help="Bin height in gridfinity units. Each unit is 7mm, plus a 4.75mm base."
@@ -233,7 +241,7 @@ export function BinConfigurator({ config, onChange, autoSize, onAutoSizeChange }
       />
 
       <SliderRow
-        label="Cutout Depth"
+        label="Tool pocket depth"
         help={`How deep the tool pocket is cut into the bin. Max ${maxCutoutDepth.toFixed(1)}mm at ${config.height_units}u height.`}
         value={Math.min(config.cutout_depth, maxCutoutDepth)}
         min={5}
@@ -243,6 +251,8 @@ export function BinConfigurator({ config, onChange, autoSize, onAutoSizeChange }
         onChange={(v) => update({ cutout_depth: v })}
       />
 
+      <details className="advanced-settings">
+      <summary>Advanced settings<span>Fit, magnets, stacking & print options</span></summary>
       <SliderRow
         label="Clearance"
         help="Extra space around tool outlines. Increase if tools fit too tightly."
@@ -429,6 +439,7 @@ export function BinConfigurator({ config, onChange, autoSize, onAutoSizeChange }
               </div>
           )}
       </div>
+      </details>
     </div>
   )
 }

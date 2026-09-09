@@ -68,26 +68,26 @@ test.describe.serial('happy path', () => {
   })
 
   test('confirm corners', async () => {
-    const continueBtn = page.getByRole('button', { name: 'Continue' })
+    const continueBtn = page.getByRole('button', { name: 'Photo looks good →' })
     await expect(continueBtn).toBeVisible({ timeout: 10_000 })
     await continueBtn.click()
 
     // may auto-trace (single tracer) or land on trace step (multiple tracers)
     await expect(
-      page.getByRole('heading', { name: /Trace Tools|Select Tools/ })
+      page.getByRole('heading', { name: /Find your tool outlines|Which tools belong/ })
     ).toBeVisible({ timeout: 30_000 })
   })
 
   test('trace tools', async () => {
     // if already on edit step (auto-traced), skip
-    const heading = await page.getByRole('heading', { name: 'Select Tools' }).isVisible()
+    const heading = await page.getByRole('heading', { name: 'Which tools belong in your bin?' }).isVisible()
     if (heading) return
 
     const traceBtn = page.getByRole('button', { name: 'Trace Tools' })
     await expect(traceBtn).toBeVisible()
     await traceBtn.click()
 
-    await expect(page.getByRole('heading', { name: 'Select Tools' })).toBeVisible({ timeout: 30_000 })
+    await expect(page.getByRole('heading', { name: 'Which tools belong in your bin?' })).toBeVisible({ timeout: 30_000 })
   })
 
   test('verify trace results', async () => {
@@ -95,23 +95,23 @@ test.describe.serial('happy path', () => {
     await expect(polygonPaths.first()).toBeVisible({ timeout: 5_000 })
 
     // select all detected tools by clicking each tool row in the sidebar
-    const toolRows = page.locator('.space-y-3 .text-xs.space-y-0\\.5 > div')
+    const toolRows = page.getByRole('checkbox', { name: /^Include / })
     const count = await toolRows.count()
     expect(count).toBeGreaterThan(0)
     for (let i = 0; i < count; i++) {
-      await toolRows.nth(i).click()
+      await toolRows.nth(i).check()
     }
 
-    const saveBtn = page.getByRole('button', { name: /^Save \d+ tools?$/ })
+    const saveBtn = page.getByRole('button', { name: 'Only save tools' })
     await expect(saveBtn).toBeVisible()
     await expect(saveBtn).toBeEnabled()
   })
 
   test('save to library', async () => {
-    const saveBtn = page.getByRole('button', { name: /^Save \d+ tools?$/ })
+    const saveBtn = page.getByRole('button', { name: 'Only save tools' })
     await saveBtn.click()
 
-    await page.waitForURL('/', { timeout: 10_000 })
+    await page.waitForURL('/#tools', { timeout: 10_000 })
 
     // at least one tool card should exist with "hacksaw" label
     await expect(page.getByText('hacksaw').first()).toBeVisible({ timeout: 5_000 })
@@ -277,7 +277,7 @@ test.describe.serial('happy path', () => {
   test('navigate home', async () => {
     await page.locator('nav[aria-label="Breadcrumb"] a', { hasText: 'Tools' }).click()
 
-    await page.waitForURL('/', { timeout: 10_000 })
+    await page.waitForURL('/#tools', { timeout: 10_000 })
     await expect(page.getByText('hacksaw').first()).toBeVisible()
   })
 
@@ -349,7 +349,7 @@ test.describe.serial('happy path', () => {
 
   test('wait for STL generation', async () => {
     // wait for export button to appear (STL generation finishes)
-    const exportBtn = page.getByRole('button', { name: /^Export/ })
+    const exportBtn = page.getByRole('button', { name: 'More download formats' })
     await expect(exportBtn).toBeVisible({ timeout: 90_000 })
     await expect(exportBtn).toBeEnabled()
   })

@@ -10,7 +10,6 @@ import type { ToolSummary, BinSummary, BinPreviewTool, BinProjectSummary, PhotoS
 import { polygonPathData } from '@/lib/svg'
 import { Check, Pencil, Trash2, Package, Plus, Loader2, Grid3X3, Folder, X } from 'lucide-react'
 import { Alert } from '@/components/Alert'
-import { PhotoIllustration, CornersIllustration, TraceIllustration, OrganiseIllustration } from '@/components/OnboardingIllustrations'
 import { GRID_UNIT } from '@/lib/constants'
 import { getDefaultBinDefaults } from '@/lib/binDefaults'
 import { useDeleteConfirmation } from '@/hooks/useDeleteConfirmation'
@@ -319,6 +318,7 @@ export default function HomePage() {
   const [stationsList, setStationsList] = useState<PhotoStation[]>([])
   const [photoStationsEnabled, setPhotoStationsEnabled] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [workspace, setWorkspace] = useState('create')
   const { deleteTarget: deleteModal, requestDelete, clearDelete } = useDeleteConfirmation<{ type: 'tool' | 'bin' | 'project' | 'station'; id: string }>()
   const [creatingBin, setCreatingBin] = useState<string | null>(null)
   const [nameModal, setNameModal] = useState<{ toolIds?: string[] } | null>(null)
@@ -404,6 +404,8 @@ export default function HomePage() {
 
   useEffect(() => {
     loadData()
+    const section = window.location.hash.slice(1)
+    if (['bins', 'tools', 'projects', 'stations'].includes(section)) setWorkspace(section)
   }, [])
 
   async function loadData() {
@@ -549,11 +551,35 @@ export default function HomePage() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto py-4 space-y-6">
+    <div className="workspace-home max-w-6xl mx-auto py-4 space-y-6">
+      <nav aria-label="Workspace" className="workspace-nav">
+        {[
+          ['create', 'Create a bin', null], ['bins', 'My bins', binsList.length],
+          ['tools', 'Tool library', toolsList.length], ['projects', 'Projects', projectsList.length],
+          ...(photoStationsEnabled ? [['stations', 'Photo stations', stationsList.length]] : []),
+        ].map(([id, label, count]) => (
+          <button key={id} type="button" aria-current={workspace === id ? 'page' : undefined} onClick={() => { setWorkspace(String(id)); window.history.replaceState(null, '', id === 'create' ? '/' : `/#${id}`) }}>
+            {label}{count !== null && <span>{count}</span>}
+          </button>
+        ))}
+      </nav>
+      {workspace === 'create' && <div className="workspace-intro">
+        <span className="workspace-eyebrow">A PLACE FOR EVERY TOOL</span>
+        <h1>Your tools. A perfect-fit bin.</h1>
+        <p>Turn a photo into a custom Gridfinity bin, ready to 3D print. No CAD experience needed.</p>
+        <ol className="journey-overview" aria-label="How to create a bin">
+          {['Upload a photo', 'Check your tools', 'Design & download'].map((label, index) => <li key={label}><span>{index + 1}</span>{label}</li>)}
+        </ol>
+      </div>}
       {/* upload */}
-      <div data-tour="upload">
+      <div data-tour="upload" hidden={workspace !== 'create'}>
         <ImageUploader onUpload={handleUpload} disabled={uploading} />
       </div>
+      {workspace === 'create' && hasData && <div className="flex flex-wrap items-center justify-center gap-3 text-sm text-text-secondary">
+        <span>Already started something?</span>
+        <button className="text-accent font-medium hover:underline" onClick={() => setWorkspace('bins')}>Open my bins →</button>
+        <button className="text-accent font-medium hover:underline" onClick={() => setWorkspace('tools')}>Use saved tools →</button>
+      </div>}
 
       {uploading && (
         <div className="flex items-center justify-center gap-2 text-text-muted text-xs">
@@ -569,7 +595,7 @@ export default function HomePage() {
       )}
 
       {/* projects */}
-      {(projectsList.length > 0 || toolsList.length > 0) && (
+      {workspace === 'projects' && (
         <div>
           <SectionHeader
             title="Projects"
@@ -681,7 +707,7 @@ export default function HomePage() {
       )}
 
       {/* tools */}
-      {toolsList.length > 0 && (
+      {workspace === 'tools' && (
         <div>
           <SectionHeader
             title="Tools" count={filteredTools.length}
@@ -824,7 +850,7 @@ export default function HomePage() {
       )}
 
       {/* bins */}
-      {(binsList.length > 0 || toolsList.length > 0) && (
+      {workspace === 'bins' && (
         <div>
           <SectionHeader
             title="Bins"
@@ -916,7 +942,7 @@ export default function HomePage() {
       )}
 
       {/* stations */}
-      {photoStationsEnabled && stationsList.length > 0 && (
+      {workspace === 'stations' && photoStationsEnabled && stationsList.length > 0 && (
         <div>
           <SectionHeader
             title="Stations"
@@ -1035,36 +1061,7 @@ export default function HomePage() {
         </div>
       )}
 
-      {/* empty state onboarding */}
-      {!loading && !hasData && (
-        <div data-tour="how-it-works">
-          <SectionHeader
-            title="How it works"
-            collapsed={collapsedSections.howItWorks}
-            onToggleCollapsed={() => setSectionCollapsed('howItWorks', !collapsedSections.howItWorks)}
-          />
-          {!collapsedSections.howItWorks && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            {[
-              { Illustration: PhotoIllustration, label: '1. Photograph', caption: 'Place tools on A4, Letter, A3, or Tabloid paper and photograph from above' },
-              { Illustration: CornersIllustration, label: '2. Corners', caption: 'Adjust the paper corners so we know the scale' },
-              { Illustration: TraceIllustration, label: '3. Trace', caption: 'AI traces tool outlines into precise silhouettes' },
-              { Illustration: OrganiseIllustration, label: '4. Organise', caption: 'Arrange tools in a bin and export the STL for printing' },
-            ].map(({ Illustration, label, caption }) => (
-              <div key={label} className="glass rounded-[8px] overflow-hidden">
-                <div className="p-3 pb-2">
-                  <Illustration />
-                </div>
-                <div className="px-3 pb-3">
-                  <p className="text-xs font-medium text-text-secondary">{label}</p>
-                  <p className="text-[11px] text-text-muted mt-0.5 leading-relaxed">{caption}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-          )}
-        </div>
-      )}
+      {loading && workspace !== 'create' && <p role="status" className="text-sm text-text-secondary">Loading your saved work…</p>}
 
       <ConfirmModal
         open={deleteModal !== null}
