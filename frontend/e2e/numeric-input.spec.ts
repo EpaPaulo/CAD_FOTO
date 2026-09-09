@@ -1,5 +1,18 @@
 import { test, expect, Page } from '@playwright/test'
 
+// Clearance now lives under the collapsed advanced settings, so every test has
+// to open that section before the input it drives is reachable.
+async function openClearanceInput(page: Page) {
+  const advanced = page.locator('details.advanced-settings')
+  await expect(advanced).toBeVisible({ timeout: 10_000 })
+  if (!(await advanced.evaluate((el: HTMLDetailsElement) => el.open))) {
+    await advanced.locator('summary').click()
+  }
+  const clearanceInput = page.locator('input[type="number"][min="0"][max="5"][step="0.1"]').first()
+  await expect(clearanceInput).toBeVisible({ timeout: 10_000 })
+  return clearanceInput
+}
+
 test.describe('numeric input deferred validation', () => {
   let page: Page
   let binId: string
@@ -27,9 +40,8 @@ test.describe('numeric input deferred validation', () => {
     await page.goto(`/bins/${binId}`)
     await page.waitForLoadState('networkidle')
 
-    // use the Cutout Clearance input (min=0, max=5, step=0.1) -- always enabled
-    const clearanceInput = page.locator('input[type="number"][min="0"][max="5"][step="0.1"]').first()
-    await expect(clearanceInput).toBeVisible({ timeout: 10_000 })
+    // the cutout clearance input (min=0, max=5, step=0.1)
+    const clearanceInput = await openClearanceInput(page)
 
     // clear and type a value that's within range -- should not be clamped mid-keystroke
     await clearanceInput.click()
@@ -44,9 +56,8 @@ test.describe('numeric input deferred validation', () => {
     await page.goto(`/bins/${binId}`)
     await page.waitForLoadState('networkidle')
 
-    // use the cutout clearance input (min=0, max=5, step=0.1)
-    const clearanceInput = page.locator('input[type="number"][min="0"][max="5"][step="0.1"]').first()
-    await expect(clearanceInput).toBeVisible({ timeout: 10_000 })
+    // the cutout clearance input (min=0, max=5, step=0.1)
+    const clearanceInput = await openClearanceInput(page)
 
     // type a value above max
     await clearanceInput.click()
@@ -65,8 +76,7 @@ test.describe('numeric input deferred validation', () => {
     await page.goto(`/bins/${binId}`)
     await page.waitForLoadState('networkidle')
 
-    const clearanceInput = page.locator('input[type="number"][min="0"][max="5"][step="0.1"]').first()
-    await expect(clearanceInput).toBeVisible({ timeout: 10_000 })
+    const clearanceInput = await openClearanceInput(page)
 
     await clearanceInput.click()
     await clearanceInput.fill('')
@@ -81,9 +91,8 @@ test.describe('numeric input deferred validation', () => {
     await page.goto(`/bins/${binId}`)
     await page.waitForLoadState('networkidle')
 
-    // use the Cutout Clearance input (always enabled)
-    const clearanceInput = page.locator('input[type="number"][min="0"][max="5"][step="0.1"]').first()
-    await expect(clearanceInput).toBeVisible({ timeout: 10_000 })
+    // the cutout clearance input
+    const clearanceInput = await openClearanceInput(page)
 
     const originalValue = await clearanceInput.inputValue()
     expect(originalValue).toBeTruthy()
