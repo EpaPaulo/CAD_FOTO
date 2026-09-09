@@ -8,7 +8,6 @@ import { maxGridUnitsForOtherAxis } from '@/lib/constants'
 import { BED_SIZE_MAX_MM, BED_SIZE_MIN_MM } from '@/lib/settings'
 import { cn } from '@/lib/utils'
 import { ClassValue } from 'clsx'
-import { useTheme } from '@/hooks/useTheme'
 
 const GF_HEIGHT_UNIT = 7.0
 const GF_BASE_HEIGHT = 4.75
@@ -64,8 +63,8 @@ function Toggle({ checked, onChange, label, help, disabled }: { checked: boolean
           style={{
             borderWidth: '1px',
             borderStyle: 'solid',
-            borderColor: checked ? '#3096bc' : '#334155',
-            backgroundColor: checked ? '#fff' : 'rgba(235,236,236,0.3)',
+            borderColor: checked ? 'var(--color-accent)' : 'var(--color-border-subtle)',
+            backgroundColor: checked ? 'var(--color-accent-ink)' : 'var(--color-text-muted)',
             boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
           }}
         />
@@ -160,9 +159,8 @@ function RadioMatrix({ sizeX, sizeY, values, onChange }: { sizeX: number; sizeY:
 }
 
 function HintBanner({ children }: { children: React.ReactNode }) {
-  const { theme } = useTheme()
   return (
-    <div className={cn("text-[11px] mt-1 leading-tight", theme === 'dark' ? 'text-amber-400' : 'text-amber-600')}>
+    <div className="text-[11px] mt-1 leading-tight text-warning">
       {children}
     </div>
   )

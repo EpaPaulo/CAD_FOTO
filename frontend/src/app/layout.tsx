@@ -28,8 +28,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <title>Tracefinity</title>
-        <meta name="description" content="Generate gridfinity bins from photos of tools" />
+        <title>TraceCAT</title>
+        <meta name="description" content="Turn a photo of your tools into a custom Gridfinity bin, ready to 3D print." />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
       </head>
       <body className="bg-base text-text-primary min-h-screen">
@@ -37,9 +37,11 @@ export default function RootLayout({
           <AuthGate>
             <header className="h-11 bg-surface/80 backdrop-blur-md border-b border-border sticky top-0 z-50">
               <div className="h-full px-4 flex items-center justify-between">
-                <Link href="/" className="flex items-center gap-2 text-sm font-bold tracking-tight text-text-primary hover:opacity-80 flex-shrink-0">
-                  <img src="/favicon.svg" alt="" className="w-6 h-6 rounded-[3px]" />
-                  Tracefinity
+                <Link href="/" className="flex items-center gap-2 text-text-primary hover:opacity-80 flex-shrink-0">
+                  <img src="/favicon.svg" alt="" className="w-6 h-6" />
+                  <span className="font-display text-[15px] font-semibold tracking-[-0.4px]">
+                    Trace<span className="text-accent">CAT</span>
+                  </span>
                 </Link>
                 <div className="flex items-center gap-0.5">
                   <ThemeToggle />

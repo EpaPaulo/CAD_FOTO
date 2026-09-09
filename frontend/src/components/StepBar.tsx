@@ -33,7 +33,7 @@ export function StepBar({ steps, current, onStepClick }: Props) {
             >
               <div className={`
                 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-semibold transition-all duration-300
-                ${completed ? 'bg-accent text-white' : active ? 'bg-accent text-white shadow-[0_0_0_3px_var(--color-accent-muted)]' : 'bg-elevated text-text-muted border border-border-subtle'}
+                ${completed ? 'bg-accent text-accent-ink' : active ? 'bg-accent text-accent-ink shadow-[0_0_0_3px_var(--color-accent-muted)]' : 'bg-elevated text-text-muted border border-border-subtle'}
               `}>
                 {completed ? <Check className="w-3 h-3" /> : i + 1}
               </div>

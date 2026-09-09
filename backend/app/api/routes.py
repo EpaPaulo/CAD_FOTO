@@ -1444,7 +1444,7 @@ async def download_stl(request: Request, session_id: str, user_id: str = Depends
     return FileResponse(
         stl_abs,
         media_type="application/sla",
-        filename=f"tracefinity-{session_id[:8]}.stl",
+        filename=f"tracecat-{session_id[:8]}.stl",
     )
 
 
@@ -1462,7 +1462,7 @@ async def download_zip(request: Request, session_id: str, user_id: str = Depends
     return FileResponse(
         str(zip_path),
         media_type="application/zip",
-        filename=f"tracefinity-{session_id[:8]}-parts.zip",
+        filename=f"tracecat-{session_id[:8]}-parts.zip",
     )
 
 
@@ -1480,7 +1480,7 @@ async def download_threemf(request: Request, session_id: str, user_id: str = Dep
     return FileResponse(
         str(threemf_path),
         media_type="application/vnd.ms-package.3dmanufacturing-3dmodel+xml",
-        filename=f"tracefinity-{session_id[:8]}.3mf",
+        filename=f"tracecat-{session_id[:8]}.3mf",
     )
 
 
@@ -2194,13 +2194,13 @@ def generate_bin_stl(request: Request, bin_id: str, user_id: str = Depends(get_u
 
 
 def _bin_stem(bin_data) -> str:
-    """Standardized filename stem: Name_XuYuHu_Dmm-tracefinity"""
+    """Standardized filename stem: Name_XuYuHu_Dmm-tracecat"""
     bc = bin_data.bin_config
     raw = (bin_data.name or "bin").strip()
     safe = re.sub(r"[^\w\-]", "_", raw).strip("_") or "bin"
     gx = f"{bc.grid_x:g}"
     gy = f"{bc.grid_y:g}"
-    return f"{safe}_{gx}u{gy}u{bc.height_units}u_{int(bc.cutout_depth)}mm-tracefinity"
+    return f"{safe}_{gx}u{gy}u{bc.height_units}u_{int(bc.cutout_depth)}mm-tracecat"
 
 
 # bin file downloads

@@ -184,13 +184,13 @@ export function BinEditorToolbar({
             <div className="flex items-center rounded-[6px] overflow-hidden border border-glass-border">
               <button
                 onClick={() => onToggleSmoothed(selectedTool.tool_id, false)}
-                className={`px-2 py-1 text-[10px] font-medium transition-colors cursor-pointer ${!smoothedToolIds?.has(selectedTool.tool_id) ? 'bg-accent text-white' : 'text-text-muted hover:text-text-secondary'}`}
+                className={`px-2 py-1 text-[10px] font-medium transition-colors cursor-pointer ${!smoothedToolIds?.has(selectedTool.tool_id) ? 'bg-accent text-accent-ink' : 'text-text-muted hover:text-text-secondary'}`}
               >
                 Accurate
               </button>
               <button
                 onClick={() => onToggleSmoothed(selectedTool.tool_id, true)}
-                className={`px-2 py-1 text-[10px] font-medium transition-colors cursor-pointer ${smoothedToolIds?.has(selectedTool.tool_id) ? 'bg-accent text-white' : 'text-text-muted hover:text-text-secondary'}`}
+                className={`px-2 py-1 text-[10px] font-medium transition-colors cursor-pointer ${smoothedToolIds?.has(selectedTool.tool_id) ? 'bg-accent text-accent-ink' : 'text-text-muted hover:text-text-secondary'}`}
               >
                 Smooth
               </button>

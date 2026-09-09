@@ -16,7 +16,7 @@ from urllib.parse import quote
 STEP_SECONDS = 30
 DIGITS = 6
 SECRET_BYTES = 20
-_ISSUER = "Tracefinity"
+_ISSUER = "TraceCAT"
 
 
 def generate_secret() -> bytes:

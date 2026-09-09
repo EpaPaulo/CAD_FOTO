@@ -301,7 +301,7 @@ def _create_admin(args: argparse.Namespace) -> int:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="python -m app.cli",
-        description="administer a Tracefinity instance without the web interface",
+        description="administer a TraceCAT instance without the web interface",
     )
     subcommands = parser.add_subparsers(dest="command", required=True)
     create = subcommands.add_parser(

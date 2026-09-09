@@ -39,7 +39,7 @@ from app.auth import resolve_account
 # drops /docs, /redoc and /docs/oauth2-redirect, but naming all three keeps
 # them gone if that coupling ever changes upstream
 app = FastAPI(
-    title="Tracefinity API",
+    title="TraceCAT API",
     version=settings.app_version if settings.show_app_version else "hidden",
     openapi_url=None,
     docs_url=None,

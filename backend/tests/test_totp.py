@@ -92,9 +92,9 @@ def test_base32_roundtrip():
 def test_otpauth_uri_shape():
     secret = b"A" * 20
     uri = totp.otpauth_uri(secret, "admin@example.com")
-    assert uri.startswith("otpauth://totp/Tracefinity:admin%40example.com?")
+    assert uri.startswith("otpauth://totp/TraceCAT:admin%40example.com?")
     assert f"secret={totp.secret_to_base32(secret)}" in uri
-    assert "issuer=Tracefinity" in uri
+    assert "issuer=TraceCAT" in uri
     assert "algorithm=SHA1" in uri
     assert "digits=6" in uri
     assert "period=30" in uri

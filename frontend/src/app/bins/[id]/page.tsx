@@ -23,14 +23,12 @@ import {
   MAX_GRID_UNITS,
   requiredGridUnits,
 } from '@/lib/constants'
-import { useTheme } from '@/hooks/useTheme'
 import { cn } from '@/lib/utils'
 import { StepBar } from '@/components/StepBar'
 
 function InfoBanner({ children }: { children: React.ReactNode }) {
-  const { theme } = useTheme()
   return (
-    <div className={cn("text-[10px] rounded px-2 py-1", theme === 'dark' ? 'bg-amber-900/20 border border-amber-800/50 text-amber-400' : 'bg-amber-500/20 border border-amber-400/50 text-amber-600')}>
+    <div className="text-[10px] rounded px-2 py-1 bg-warning-muted border border-warning-border text-warning">
       {children}
     </div>
   )

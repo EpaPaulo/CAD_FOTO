@@ -18,9 +18,9 @@ const variantsDark = {
     Icon: XCircle,
   },
   warning: {
-    container: 'bg-amber-900/15 border-amber-800/40',
-    icon: 'text-amber-400',
-    text: 'text-amber-200',
+    container: 'bg-warning-muted border-warning-border',
+    icon: 'text-warning',
+    text: 'text-warning',
     Icon: AlertTriangle,
   },
   info: {
@@ -45,9 +45,9 @@ const variantsLight = {
     Icon: XCircle,
   },
   warning: {
-    container: 'bg-amber-500/15 border-amber-400/40',
-    icon: 'text-amber-600',
-    text: 'text-amber-600',
+    container: 'bg-warning-muted border-warning-border',
+    icon: 'text-warning',
+    text: 'text-warning',
     Icon: AlertTriangle,
   },
   info: {

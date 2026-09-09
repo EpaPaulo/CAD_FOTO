@@ -16,7 +16,7 @@ export function StepIndicator({ steps, current }: Props) {
           <div className="flex items-center gap-1.5">
             <div className={`
               w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-semibold
-              ${i < current ? 'bg-accent text-white' : i === current ? 'bg-accent text-white' : 'bg-elevated text-text-muted border border-border-subtle'}
+              ${i < current ? 'bg-accent text-accent-ink' : i === current ? 'bg-accent text-accent-ink' : 'bg-elevated text-text-muted border border-border-subtle'}
             `}>
               {i < current ? (
                 <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>

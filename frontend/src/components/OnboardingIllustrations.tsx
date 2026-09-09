@@ -4,7 +4,7 @@ export function PhotoIllustration() {
   return (
     <svg viewBox="0 0 200 140" fill="none" className="w-full h-full">
       {/* table surface */}
-      <rect x="10" y="20" width="180" height="110" rx="4" fill="#111827" />
+      <rect x="10" y="20" width="180" height="110" rx="4" fill="#2a2723" />
 
       {/* paper sheet */}
       <rect x="40" y="32" width="120" height="85" rx="1" fill="#e2e8f0" />
@@ -23,13 +23,13 @@ export function PhotoIllustration() {
       <path d="M130 48 L132 70 L135 72 L132 95 L128 95 L125 72 L128 70 L130 48Z" fill="#475569" />
 
       {/* camera icon above */}
-      <rect x="85" y="2" width="30" height="20" rx="3" fill="#5ab4de" />
-      <circle cx="100" cy="13" r="5" fill="#0a0f1a" />
-      <circle cx="100" cy="13" r="3" fill="#5ab4de" />
-      <rect x="93" y="3" width="8" height="3" rx="1" fill="#48a8d6" />
+      <rect x="85" y="2" width="30" height="20" rx="3" fill="var(--color-accent)" />
+      <circle cx="100" cy="13" r="5" fill="var(--color-accent-ink)" />
+      <circle cx="100" cy="13" r="3" fill="var(--color-accent)" />
+      <rect x="93" y="3" width="8" height="3" rx="1" fill="var(--color-accent)" />
 
       {/* downward arrow from camera */}
-      <path d="M100 24 L96 28 L104 28Z" fill="#5ab4de" />
+      <path d="M100 24 L96 28 L104 28Z" fill="var(--color-accent)" />
     </svg>
   )
 }
@@ -48,16 +48,16 @@ export function CornersIllustration() {
         [50, 30], [160, 25], [170, 110], [35, 115],
       ].map(([cx, cy], i) => (
         <g key={i}>
-          <circle cx={cx} cy={cy} r="7" fill="#5ab4de" />
+          <circle cx={cx} cy={cy} r="7" fill="var(--color-accent)" />
           <circle cx={cx} cy={cy} r="3" fill="white" />
         </g>
       ))}
 
       {/* dotted alignment lines */}
-      <line x1="50" y1="30" x2="160" y2="25" stroke="#5ab4de" strokeWidth="1" strokeDasharray="4 3" opacity="0.5" />
-      <line x1="160" y1="25" x2="170" y2="110" stroke="#5ab4de" strokeWidth="1" strokeDasharray="4 3" opacity="0.5" />
-      <line x1="170" y1="110" x2="35" y2="115" stroke="#5ab4de" strokeWidth="1" strokeDasharray="4 3" opacity="0.5" />
-      <line x1="35" y1="115" x2="50" y2="30" stroke="#5ab4de" strokeWidth="1" strokeDasharray="4 3" opacity="0.5" />
+      <line x1="50" y1="30" x2="160" y2="25" stroke="var(--color-accent)" strokeWidth="1" strokeDasharray="4 3" opacity="0.5" />
+      <line x1="160" y1="25" x2="170" y2="110" stroke="var(--color-accent)" strokeWidth="1" strokeDasharray="4 3" opacity="0.5" />
+      <line x1="170" y1="110" x2="35" y2="115" stroke="var(--color-accent)" strokeWidth="1" strokeDasharray="4 3" opacity="0.5" />
+      <line x1="35" y1="115" x2="50" y2="30" stroke="var(--color-accent)" strokeWidth="1" strokeDasharray="4 3" opacity="0.5" />
 
       {/* drag arrows on one corner */}
       <path d="M173 106 L183 100" stroke="#64748b" strokeWidth="1.5" markerEnd="url(#arrowhead)" />
@@ -81,17 +81,17 @@ export function TraceIllustration() {
       <path d="M55 40 L53 75 L50 78 L53 105 L57 105 L60 78 L57 75 L55 40Z" fill="#475569" />
 
       {/* arrow in the middle */}
-      <path d="M95 70 L105 70" stroke="#5ab4de" strokeWidth="2" />
-      <path d="M103 65 L110 70 L103 75" fill="#5ab4de" />
+      <path d="M95 70 L105 70" stroke="var(--color-accent)" strokeWidth="2" />
+      <path d="M103 65 L110 70 L103 75" fill="var(--color-accent)" />
 
       {/* right panel: mask */}
       <rect x="112" y="15" width="80" height="110" rx="3" fill="#f1f5f9" />
       {/* tool shape in mask (black) */}
-      <path d="M134 35 L134 100 Q134 105 142 105 Q150 105 150 100 L150 35 Q150 28 142 25 Q134 28 134 35Z" fill="#0a0f1a" />
-      <path d="M159 40 L157 75 L154 78 L157 105 L161 105 L164 78 L161 75 L159 40Z" fill="#0a0f1a" />
+      <path d="M134 35 L134 100 Q134 105 142 105 Q150 105 150 100 L150 35 Q150 28 142 25 Q134 28 134 35Z" fill="var(--color-accent-ink)" />
+      <path d="M159 40 L157 75 L154 78 L157 105 L161 105 L164 78 L161 75 L159 40Z" fill="var(--color-accent-ink)" />
 
       {/* "AI" label on arrow */}
-      <text x="102" y="62" textAnchor="middle" fill="#5ab4de" fontSize="9" fontWeight="600">AI</text>
+      <text x="102" y="62" textAnchor="middle" fill="var(--color-accent)" fontSize="9" fontWeight="600">AI</text>
     </svg>
   )
 }
@@ -117,10 +117,10 @@ export function OrganiseIllustration() {
 
       {/* download arrow */}
       <g transform="translate(165, 55)">
-        <rect x="-10" y="-10" width="30" height="30" rx="15" fill="#5ab4de" opacity="0.15" />
-        <path d="M5 -4 L5 6" stroke="#5ab4de" strokeWidth="2" strokeLinecap="round" />
-        <path d="M0 3 L5 8 L10 3" stroke="#5ab4de" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        <line x1="0" y1="11" x2="10" y2="11" stroke="#5ab4de" strokeWidth="2" strokeLinecap="round" />
+        <rect x="-10" y="-10" width="30" height="30" rx="15" fill="var(--color-accent)" opacity="0.15" />
+        <path d="M5 -4 L5 6" stroke="var(--color-accent)" strokeWidth="2" strokeLinecap="round" />
+        <path d="M0 3 L5 8 L10 3" stroke="var(--color-accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        <line x1="0" y1="11" x2="10" y2="11" stroke="var(--color-accent)" strokeWidth="2" strokeLinecap="round" />
       </g>
 
       {/* ".STL" label */}
@@ -144,7 +144,7 @@ export function CornersHint() {
       {[
         [30, 12], [120, 10], [125, 48], [25, 50],
       ].map(([cx, cy], i) => (
-        <circle key={i} cx={cx} cy={cy} r="4" fill="#5ab4de" />
+        <circle key={i} cx={cx} cy={cy} r="4" fill="var(--color-accent)" />
       ))}
 
       {/* arrow from cursor to corner */}
@@ -165,13 +165,13 @@ export function TraceHint() {
       <path d="M35 18 L35 40 Q35 44 42 44 Q49 44 49 40 L49 18 Q49 14 42 12 Q35 14 35 18Z" fill="#475569" />
 
       {/* arrow */}
-      <path d="M92 30 L118 30" stroke="#5ab4de" strokeWidth="1.5" />
-      <path d="M115 26 L121 30 L115 34" fill="#5ab4de" />
-      <text x="105" y="25" textAnchor="middle" fill="#5ab4de" fontSize="7" fontWeight="600">AI</text>
+      <path d="M92 30 L118 30" stroke="var(--color-accent)" strokeWidth="1.5" />
+      <path d="M115 26 L121 30 L115 34" fill="var(--color-accent)" />
+      <text x="105" y="25" textAnchor="middle" fill="var(--color-accent)" fontSize="7" fontWeight="600">AI</text>
 
       {/* mask side */}
       <rect x="125" y="12" width="70" height="36" rx="2" fill="#e2e8f0" />
-      <path d="M145 18 L145 40 Q145 44 152 44 Q159 44 159 40 L159 18 Q159 14 152 12 Q145 14 145 18Z" fill="#0a0f1a" />
+      <path d="M145 18 L145 40 Q145 44 152 44 Q159 44 159 40 L159 18 Q159 14 152 12 Q145 14 145 18Z" fill="var(--color-accent-ink)" />
     </svg>
   )
 }
@@ -185,7 +185,7 @@ export function EditHint() {
       <polygon
         points="25,15 65,13 68,48 22,50"
         fill="rgba(90, 180, 222, 0.15)"
-        stroke="#5ab4de"
+        stroke="var(--color-accent)"
         strokeWidth="1.5"
       />
       {/* tick */}

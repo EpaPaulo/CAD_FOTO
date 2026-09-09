@@ -153,7 +153,7 @@ export function SessionInfo({ session, onUpdate }: Props) {
       <div className="flex gap-2 pt-2">
         <button
           onClick={handleSave}
-          className="flex-1 py-1.5 text-sm bg-accent text-white rounded hover:bg-accent-hover flex items-center justify-center gap-1"
+          className="flex-1 py-1.5 text-sm bg-accent text-accent-ink rounded hover:bg-accent-hover flex items-center justify-center gap-1"
         >
           <Check className="w-4 h-4" />
           Save

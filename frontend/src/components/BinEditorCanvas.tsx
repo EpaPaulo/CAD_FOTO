@@ -119,7 +119,7 @@ export function BinEditorCanvas({
           style={{ overflow: 'visible' }}
           onClick={handleBackgroundClick}
         >
-          <rect x="0" y="0" width={displayWidth} height={displayHeight} fill="rgb(30, 41, 59)" rx="4" />
+          <rect x="0" y="0" width={displayWidth} height={displayHeight} fill="var(--color-bin-preview-fill)" rx="4" />
           {/* full-grid lines at every 0.5-unit step up to gridX */}
           {Array.from({ length: Math.floor(gridX * 2) + 1 }).map((_, i) => {
             const pos = i * 0.5
@@ -204,8 +204,8 @@ export function BinEditorCanvas({
                 <path
                   d={pathData}
                   fillRule="evenodd"
-                  fill={isSelected ? 'rgb(51, 65, 85)' : 'rgb(71, 85, 105)'}
-                  stroke={isSelected ? 'rgb(148, 163, 184)' : 'rgb(100, 116, 139)'}
+                  fill={isSelected ? 'var(--color-accent-muted)' : 'var(--color-tool-fill)'}
+                  stroke={isSelected ? 'var(--color-accent)' : 'var(--color-tool-stroke)'}
                   strokeWidth={handleStroke}
                   className={activeTool === 'text' ? 'cursor-crosshair' : 'cursor-move'}
                   onMouseDown={handleToolMouseDown(tool.id)}

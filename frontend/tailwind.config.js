@@ -25,6 +25,12 @@ module.exports = {
           DEFAULT: 'var(--color-accent)',
           hover: 'var(--color-accent-hover)',
           muted: 'var(--color-accent-muted)',
+          ink: 'var(--color-accent-ink)',
+        },
+        warning: {
+          DEFAULT: 'var(--color-warning)',
+          muted: 'var(--color-warning-muted)',
+          border: 'var(--color-warning-border)',
         },
         glass: {
           bg: 'var(--color-glass-bg)',
@@ -43,6 +49,7 @@ module.exports = {
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        display: ['Space Grotesk', 'Inter', 'system-ui', 'sans-serif'],
       },
     },
   },

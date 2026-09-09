@@ -69,7 +69,7 @@ export default function LoginForm({ returnTo = '/' }: { returnTo?: string }) {
         <p className="text-xs text-text-muted mb-4">
           {pendingToken
             ? 'Enter a code from your authenticator app, or a backup code.'
-            : 'Sign in to your Tracefinity account.'}
+            : 'Sign in to your TraceCAT account.'}
         </p>
         {error && (
           <div className="mb-3">

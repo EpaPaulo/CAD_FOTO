@@ -300,7 +300,7 @@ export default function TracePage() {
       const url = URL.createObjectURL(blob)
       const link = document.createElement('a')
       link.href = url
-      link.download = `tracefinity-${sessionId.slice(0, 8)}.jpg`
+      link.download = `tracecat-${sessionId.slice(0, 8)}.jpg`
       link.click()
       URL.revokeObjectURL(url)
     } catch {
