@@ -1,4 +1,5 @@
 import { test, expect, Page } from '@playwright/test'
+import { API_BASE_URL } from './api-base'
 
 // Clearance now lives under the collapsed advanced settings, so every test has
 // to open that section before the input it drives is reachable.
@@ -21,7 +22,7 @@ test.describe('numeric input deferred validation', () => {
     page = await browser.newPage()
 
     // create a bin via API so we have a configurator with numeric inputs
-    const resp = await page.request.post('http://localhost:8000/api/bins', {
+    const resp = await page.request.post(`${API_BASE_URL}/api/bins`, {
       data: { name: 'Numeric input test bin' },
     })
     expect(resp.ok()).toBeTruthy()
@@ -31,7 +32,7 @@ test.describe('numeric input deferred validation', () => {
 
   test.afterAll(async () => {
     if (binId) {
-      await page.request.delete(`http://localhost:8000/api/bins/${binId}`)
+      await page.request.delete(`${API_BASE_URL}/api/bins/${binId}`)
     }
     await page.close()
   })
