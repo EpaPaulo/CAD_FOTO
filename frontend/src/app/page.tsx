@@ -2,16 +2,17 @@
 
 import { useState, useEffect, useRef, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
-import { ImageUploader } from '@/components/ImageUploader'
+import { CapturePanel } from '@/components/CapturePanel'
 import { ConfirmModal } from '@/components/ConfirmModal'
 import { SectionHeader } from '@/components/SectionHeader'
-import { uploadImage, listTools, listBins, listProjects, listPhotoStations, deleteTool, deleteBin, deleteProject, deletePhotoStation, updatePhotoStation, createBin, createProject, getImageUrl, getAvailableKeys } from '@/lib/api'
+import { listTools, listBins, listProjects, listPhotoStations, deleteTool, deleteBin, deleteProject, deletePhotoStation, updatePhotoStation, createBin, createProject, getImageUrl, getAvailableKeys } from '@/lib/api'
 import type { ToolSummary, BinSummary, BinPreviewTool, BinProjectSummary, PhotoStation, Point, ToolImageContext, AffineMatrix, ProjectStatus } from '@/types'
 import { polygonPathData } from '@/lib/svg'
 import { Check, Pencil, Trash2, Package, Plus, Loader2, Grid3X3, Folder, X } from 'lucide-react'
 import { Alert } from '@/components/Alert'
 import { GRID_UNIT } from '@/lib/constants'
 import { getDefaultBinDefaults } from '@/lib/binDefaults'
+import { designerUrl } from '@/lib/designerRoute'
 import { useDeleteConfirmation } from '@/hooks/useDeleteConfirmation'
 import { projectNameMap, projectStatusLabels, toolProjectLabel, toolProjectTitle } from '@/lib/projectSelectors'
 import { filterToolsByStatus, getToolQuickFilterCounts } from '@/lib/toolFilters'
@@ -310,7 +311,6 @@ function HintBanner({ children }: { children: React.ReactNode }) {
 
 export default function HomePage() {
   const router = useRouter()
-  const [uploading, setUploading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [toolsList, setToolsList] = useState<ToolSummary[]>([])
   const [binsList, setBinsList] = useState<BinSummary[]>([])
@@ -436,19 +436,6 @@ export default function HomePage() {
     setLoading(false)
   }
 
-  async function handleUpload(file: File) {
-    setUploading(true)
-    setError(null)
-    try {
-      const result = await uploadImage(file)
-      router.push(`/trace/${result.session_id}`)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'upload failed')
-    } finally {
-      setUploading(false)
-    }
-  }
-
   async function handleDeleteTool(id: string) {
     try {
       await deleteTool(id)
@@ -563,30 +550,15 @@ export default function HomePage() {
           </button>
         ))}
       </nav>
-      {workspace === 'create' && <div className="workspace-intro">
-        <span className="workspace-eyebrow">A PLACE FOR EVERY TOOL</span>
-        <h1>Your tools. A perfect-fit bin.</h1>
-        <p>Turn a photo into a custom Gridfinity bin, ready to 3D print. No CAD experience needed.</p>
-        <ol className="journey-overview" aria-label="How to create a bin">
-          {['Upload a photo', 'Check your tools', 'Design & download'].map((label, index) => <li key={label}><span>{index + 1}</span>{label}</li>)}
-        </ol>
-      </div>}
-      {/* upload */}
-      <div data-tour="upload" hidden={workspace !== 'create'}>
-        <ImageUploader onUpload={handleUpload} disabled={uploading} />
+      {/* the photo that starts everything; the designer takes it from here */}
+      <div hidden={workspace !== 'create'}>
+        <CapturePanel onUploaded={(sessionId) => router.push(designerUrl({ sessionId }))} />
       </div>
       {workspace === 'create' && hasData && <div className="flex flex-wrap items-center justify-center gap-3 text-sm text-text-secondary">
         <span>Already started something?</span>
         <button className="text-accent font-medium hover:underline" onClick={() => setWorkspace('bins')}>Open my bins →</button>
         <button className="text-accent font-medium hover:underline" onClick={() => setWorkspace('tools')}>Use saved tools →</button>
       </div>}
-
-      {uploading && (
-        <div className="flex items-center justify-center gap-2 text-text-muted text-xs">
-          <Loader2 className="w-3.5 h-3.5 animate-spin" />
-          <span>Uploading...</span>
-        </div>
-      )}
 
       {error && (
         <div className="max-w-md mx-auto">

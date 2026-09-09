@@ -23,14 +23,21 @@ export default function RootLayout({
   const [showHelp, setShowHelp] = useState(false)
   const pathname = usePathname()
 
-  const isFullBleed = /^\/(trace|tools|bins|stations)\//.test(pathname)
+  const isFullBleed = /^\/(trace|tools|bins|stations)\//.test(pathname) || pathname === '/designer'
 
   return (
-    <html lang="en">
+    // the inline script below sets data-theme before paint, so the server HTML
+    // legitimately differs from the hydrated attribute
+    <html lang="en" suppressHydrationWarning>
       <head>
         <title>TraceCAT</title>
         <meta name="description" content="Turn a photo of your tools into a custom Gridfinity bin, ready to 3D print." />
         <link rel="icon" type="image/png" href="/logo.png" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('theme');document.documentElement.setAttribute('data-theme',t==='dark'?'dark':'light')}catch(e){}})()`,
+          }}
+        />
       </head>
       <body className="bg-base text-text-primary min-h-screen">
         <QueryClientProvider client={queryClient}>

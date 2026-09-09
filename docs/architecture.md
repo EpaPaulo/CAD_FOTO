@@ -48,11 +48,15 @@ tracefinity/
 │   ├── src/
 │   │   ├── app/
 │   │   │   ├── page.tsx               # dashboard (projects + tools + bins)
-│   │   │   ├── trace/[id]/            # corner + polygon editing
+│   │   │   ├── designer/              # photo -> tools -> bin on one page
+│   │   │   ├── trace/[id]/            # corner + polygon editing (deep link)
 │   │   │   ├── tools/[id]/            # tool vertex/hole editor
 │   │   │   ├── projects/[id]/         # project planning workflow
-│   │   │   └── bins/[id]/             # bin builder + 3D preview
+│   │   │   └── bins/[id]/             # bin builder + 3D preview (deep link)
 │   │   ├── components/
+│   │   │   ├── CapturePanel.tsx       # pitch + upload drop zone
+│   │   │   ├── TraceWorkspace.tsx     # trace phase, shared by both routes
+│   │   │   ├── BinWorkspace.tsx       # design phase, shared by both routes
 │   │   │   ├── BinEditor.tsx          # bin layout orchestrator
 │   │   │   ├── BinEditorToolbar.tsx   # bin toolbar (mode, snap, actions)
 │   │   │   ├── BinEditorCanvas.tsx    # bin SVG canvas

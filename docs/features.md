@@ -17,6 +17,7 @@ Reference for AI agents. Check here before suggesting new features or claiming s
 - Mask preview
 - Session persistence (save in-progress tracing)
 - Step navigation (corners/trace/edit)
+- Single-page designer: photo, tools, and bin design without leaving `/designer`; `/trace/[id]` and `/bins/[id]` stay as deep links
 - Tool selection with include/exclude checkboxes
 - Session renaming
 
@@ -117,7 +118,7 @@ Reference for AI agents. Check here before suggesting new features or claiming s
 
 ## Settings and UI
 
-- Dark/light mode toggle
+- Dark/light mode toggle (light by default)
 - Guided tour / onboarding
 - Section collapse (remembered state)
 - Help tooltips with keyboard shortcut hints

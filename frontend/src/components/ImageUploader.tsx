@@ -38,12 +38,14 @@ export function ImageUploader({ onUpload, disabled = false }: Props) {
         {error && <p role="alert" className="text-sm text-red-500">{error}</p>}
       </div>
       <aside className="capture-guide">
-        <div className="flex items-center gap-2 text-sm font-semibold"><Camera className="h-4 w-4 text-accent" /> A good photo makes a great fit</div>
         <div className="capture-example"><PhotoIllustration /></div>
-        <ul className="space-y-3 text-sm text-text-secondary">
-          {['Place tools apart on a sheet of paper.', 'Keep all four paper corners visible.', 'Take the photo straight from above.'].map(tip => <li key={tip} className="flex gap-2"><Check className="h-4 w-4 mt-0.5 shrink-0 text-accent" />{tip}</li>)}
-        </ul>
-        <p className="mt-4 text-xs text-text-secondary">A4, Letter, A3 or Tabloid. The paper gives us the scale for a precise fit.</p>
+        <div>
+          <div className="capture-guide-title"><Camera className="h-4 w-4 text-accent" /> A good photo makes a great fit</div>
+          <ul className="space-y-2 text-sm text-text-secondary">
+            {['Place tools apart on a sheet of paper.', 'Keep all four paper corners visible.', 'Take the photo straight from above.'].map(tip => <li key={tip} className="flex gap-2"><Check className="h-4 w-4 mt-0.5 shrink-0 text-accent" />{tip}</li>)}
+          </ul>
+          <p className="capture-note">A4, Letter, A3 or Tabloid. The paper gives us the scale for a precise fit.</p>
+        </div>
       </aside>
     </section>
   )

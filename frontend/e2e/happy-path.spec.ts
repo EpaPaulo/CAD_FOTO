@@ -62,8 +62,9 @@ test.describe.serial('happy path', () => {
     const fileInput = page.locator('input[type="file"]')
     await fileInput.setInputFiles(FIXTURE_IMAGE)
 
-    await page.waitForURL(/\/trace\//, { timeout: 60_000 })
-    sessionId = page.url().split('/trace/')[1]
+    // the photo opens the designer in place, which carries the session in its URL
+    await page.waitForURL(/\/designer\?session=/, { timeout: 60_000 })
+    sessionId = new URL(page.url()).searchParams.get('session') || ''
     expect(sessionId).toBeTruthy()
   })
 

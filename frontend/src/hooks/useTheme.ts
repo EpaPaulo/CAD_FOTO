@@ -9,10 +9,10 @@ let observer: MutationObserver | null = null
 let initialized = false
 
 function readTheme(): Theme {
-  if (typeof document === 'undefined') return 'dark'
-  return document.documentElement.getAttribute('data-theme') === 'light'
-    ? 'light'
-    : 'dark'
+  if (typeof document === 'undefined') return 'light'
+  return document.documentElement.getAttribute('data-theme') === 'dark'
+    ? 'dark'
+    : 'light'
 }
 
 function emit() {
@@ -28,19 +28,16 @@ function ensureObserver() {
   })
 }
 
-/** Resolve theme from localStorage / system preference once on the client. */
+/** Resolve the theme from localStorage once on the client; light is the default. */
 export function initTheme() {
   if (initialized || typeof window === 'undefined') return
   initialized = true
 
   const stored = localStorage.getItem('theme')
-  if (stored === 'light' || stored === 'dark') {
-    document.documentElement.setAttribute('data-theme', stored)
-  } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
-    document.documentElement.setAttribute('data-theme', 'light')
-  } else {
-    document.documentElement.setAttribute('data-theme', 'dark')
-  }
+  document.documentElement.setAttribute(
+    'data-theme',
+    stored === 'light' || stored === 'dark' ? stored : 'light',
+  )
 }
 
 function subscribe(listener: () => void) {
@@ -61,7 +58,7 @@ function getSnapshot(): Theme {
 }
 
 function getServerSnapshot(): Theme {
-  return 'dark'
+  return 'light'
 }
 
 export function setTheme(next: Theme) {
