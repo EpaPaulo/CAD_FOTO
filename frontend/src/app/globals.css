@@ -383,3 +383,8 @@ input[type="number"] { -moz-appearance: textfield; }
   .bin-canvases { flex-direction:column; flex:none; }
   .bin-canvases > div { flex:none; min-height:420px; }
 }
+
+/* Header logo: one mark per theme, swapped without a hydration mismatch. */
+.logo-dark { display: none; }
+[data-theme="dark"] .logo-light { display: none; }
+[data-theme="dark"] .logo-dark { display: block; }

@@ -45,7 +45,9 @@ export default function RootLayout({
             <header className="h-11 bg-surface/80 backdrop-blur-md border-b border-border sticky top-0 z-50">
               <div className="h-full px-4 flex items-center justify-between">
                 <Link href="/" className="flex items-center gap-2 text-text-primary hover:opacity-80 flex-shrink-0">
-                  <img src="/logo.png" alt="" className="w-7 h-7" />
+                  {/* the light-theme mark swaps in via CSS so the server HTML matches either theme */}
+                  <img src="/logo-light.png" alt="" className="w-7 h-7 logo-light" />
+                  <img src="/logo.png" alt="" className="w-7 h-7 logo-dark" />
                   <span className="font-display text-[15px] font-semibold tracking-[-0.4px]">
                     Trace<span className="text-accent">CAT</span>
                   </span>
